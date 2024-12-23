@@ -1,0 +1,24 @@
+\section{Interface to EPICS}
+
+The central part of the system is an online database (ODB)
+implemented vis a shared memory segment
+
+ODB stores all information about the running system -
+the system configuration, status.
+
+ODB has web-based interface, command line interface
+
+Restricted functionality web server (MHTTPD) connects clients
+to ODB. The web server doesn't execute applications, instead,
+it simply updates the ODB.
+
+Clients: frontends, communicating with the hardware and other
+parts of the system.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
+
