@@ -1,16 +1,41 @@
 \section{System architecture}
 
-The central part of the system is an online database (ODB)
-implemented vis a shared memory segment
+The proposed system consists of two big parts :
+\begin{itemize}
+\item
+  ARTDAQ : handles the trigger farm and the data processing
+\item
+  MIDAS : handles the run configuration, run control, messaging,
+  standardizes interfaces between various parts of the online system,
+  and provides web-based interface for shifters,
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{ODB} 
+The central part of the system is an Online DataBase (ODB)
+implemented as a shared memory segment.
 
 ODB stores all information about the running system -
 the system configuration, status.
 
-ODB has web-based interface, command line interface
-
 Restricted functionality web server (MHTTPD) connects clients
 to ODB. The web server doesn't execute applications, instead,
 it simply updates the ODB.
+
+MIDAS ODB has several interfaces:
+\begin{itemize}
+\item 
+  web-based interface - via the mhttpd ODB page
+\item
+  command line interface (odbedit)
+\item
+  C++ interface allowing C++ clients to interact with ODB
+\item
+  python interface
+\end{itemize}
+
+In all cases, clients connect to MHTTPD and MHTTPD acts as
+the only agent directly interacting with the ODB.
 
 Clients: frontends, communicating with the hardware and other
 parts of the system.
@@ -25,6 +50,7 @@ frontends.
 MIDAS event building functionality is not used , done by ARTDAQ.
 
 The architecture of the Mu2e DAQ requires only monitoring and slow control frontends.
+
 All high bandwidth traffic goes through ARTDAQ.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -52,15 +78,17 @@ Two mechanisms
   one monitoring frontend per node 
 \item
   monitors DTCs, ROCs, and separate collection of the monitoring information and its visualization
-\item
-  messaging: jsonrpc. Each client can have a jsonrpc server and receive messages
-  from any other client.
-\item
-  clients can broadcast messages to the system (info and alarm)
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Alarm system}
+
+MIDAS has a built-in alarm system which could be used to inform shifters
+about various categories of failures.
+
+That is not a replacement for critical alarms coming from different inputs.
+CRYO ? Accelerator ? - talk to Andy Hocker.
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
