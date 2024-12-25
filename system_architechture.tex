@@ -11,16 +11,26 @@ The proposed system consists of two big parts :
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{ODB} 
-The central part of the system is an Online DataBase (ODB)
-implemented as a shared memory segment.
+\subsection{MIDAS}
 
-ODB stores all information about the running system -
-the system configuration, status.
+COre parts of MIDAS are :
 
-Restricted functionality web server (MHTTPD) connects clients
-to ODB. The web server doesn't execute applications, instead,
-it simply updates the ODB.
+\begin{itemize}
+\item 
+  mhttpd, a web server with restricted functionality
+  mhttpd connects its clients to ODB. 
+  The mhttpd doesn't execute any applications. Instead, it only updates the ODB.
+\item
+  Clients: frontends, communicating with the hardware and other
+  parts of the system. Different types of frontends. Mu2e only needs slow monitoring.
+\item
+  Online DataBase (ODB) - a shared memory segment, which stores all configuration
+  data of the system
+  Despite its name, ODB is not a database. Instead, it stores only current configuration
+  of the system, As the new run starts, a run number-stamped configuration is exported and stored.
+  Logical organization of ODB maps onto a json structure and is well suited for describing
+  complex configurations with multiple levels of hierarchy
+\end{itemize}
 
 MIDAS ODB has several interfaces:
 \begin{itemize}
@@ -36,9 +46,6 @@ MIDAS ODB has several interfaces:
 
 In all cases, clients connect to MHTTPD and MHTTPD acts as
 the only agent directly interacting with the ODB.
-
-Clients: frontends, communicating with the hardware and other
-parts of the system.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -89,8 +96,6 @@ about various categories of failures.
 That is not a replacement for critical alarms coming from different inputs.
 CRYO ? Accelerator ? - talk to Andy Hocker.
 
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \subsection{Javascript web interface}
 
@@ -101,9 +106,6 @@ CRYO ? Accelerator ? - talk to Andy Hocker.
   MIDAS provides Javascript API to ODB, which facilitates development of
   functional experiment-specific web pages.
 \end{itemize}
-
-
-
 
 
 %%% Local Variables:
