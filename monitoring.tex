@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Monitoring}
+\section{Monitoring and error reporting}
 
 Components of the monitoring system:
 
@@ -41,6 +41,22 @@ Components of the monitoring system:
   }
 \end{figure}
 
+State of each enabled configurable element is monitored by a MIDAS frontend.
+If a problem is detected, the status of the element is set to a negative
+number, which value represents the status code of the problem.
+
+A special configuration frontend propagates the status of the problem up the
+configuration tree in ODB. For example, if a problem is detected with one of the
+tracker panels, the status box corresponding to the tracker on the top monitoring
+page will also become red.
+
+After a problem with the panel is cleared, its status gets set to zero by the
+monitoring frontend. The change is propagated up the configuration tree
+by the configuration frontend, and the color of the tracker monitoring box
+becomes green again.
+
+
+THe element status box becomes red. 
 
 %%% Local Variables:
 %%% mode: latex
