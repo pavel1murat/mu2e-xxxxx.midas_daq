@@ -1,6 +1,6 @@
 \section{System architecture}
 
-The proposed system consists of two big software components :
+The proposed system consists of two major software components :
 \begin{itemize}
 \item
   ARTDAQ : handles the trigger farm and the data processing
@@ -10,7 +10,15 @@ The proposed system consists of two big software components :
   and provides web-based interface for the shifters,
 \end{itemize}
 
-The DAQ architecture is schematically presented in Figure ~\ref{figure:system_architecture}
+ARTDAQ supports computing farms with distributed architecture, 
+and all high-bandwidth data traffic goes through ARTDAQ.
+
+MIDAS architecture assumes a central server and multiple clients,
+best suited for configuration/control applications.
+
+The architecture of the proposed DAQ system is schematically presented
+in Figure ~\ref{figure:system_architecture}.
+
 \begin{figure}[H]
   \begin{tikzpicture}
     \node[anchor=south west,inner sep=0] at (0,0.) {
@@ -24,7 +32,9 @@ The DAQ architecture is schematically presented in Figure ~\ref{figure:system_ar
   \end{tikzpicture}
   \caption{
     \label{figure:system_architecture}
-    Architecture of the MIDAS-based DAQ system
+    Architecture of the MIDAS-based DAQ system. Communication protocols:
+    red solid lines - JSON-RPC, blue solid lines - XML-RPC,
+    red dashed lines - http(s).
   }
 \end{figure}
 
