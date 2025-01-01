@@ -1,12 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Monitoring and error reporting}
+\section{Run-time diagnostics and error reporting}
 
-Components of the monitoring system:
+At run-time, the status of the system is visualized by the system status tree.
+The top page of the tree is shown in Figure~\ref{figure:mu2e_status_page}.
 
 \begin{itemize}
-\item
-  status of the running system is represented by the status tree. The top page
-  of the tree is shown in Figure~\ref{figure:mu2e_status_page}.
 \item
   one monitoring frontend per DAQ node, monitors the DTCs and the ARTDAQ processes.
   The frontend is responsible for setting status of the ROCs, boardreaders, and such.

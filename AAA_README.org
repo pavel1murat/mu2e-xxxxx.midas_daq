@@ -1,4 +1,7 @@
 #+startup:fold
 
 
-* file:
+* directory: file:./
+* ------------------------------------------------------------------------------
+* note: file:tmp/mu2e-xxxxx.pdf
+* drawings: 

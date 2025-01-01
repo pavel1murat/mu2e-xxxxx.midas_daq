@@ -1,9 +1,19 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Mu2e DAQ configuration}
-
-\subsection{Configurations}
+\section{Configuring the Mu2e DAQ }
 
 The system supports multiple configurations, as shown in Figure~\ref{figure:run_configurations}
+
+\begin{itemize}
+\item 
+  The configurations are stored in "/Mu2e/RunConfigurations" subtree
+\item
+  each configuration is an independent subtree, any modification of a given 
+  configuration doesn't affect other configurations
+\item
+  a configuration can be saved as a .json structure and loaded from an external .json file
+\item
+  ODB links are allowed, but have to point within the configuration
+\end{itemize}
 
 \begin{figure}[H]
   \begin{tikzpicture}
@@ -18,13 +28,21 @@ The system supports multiple configurations, as shown in Figure~\ref{figure:run_
   \end{tikzpicture}
   \caption{
     \label{figure:run_configurations}
-    Run configurations
+    Top-level run configurations
   }
 \end{figure}
 
-Each configuration has a name, a status, and includes a set of subdetectors, as shown in
-
-Figure~\ref{figure:configuration_top}
+\begin{itemize}
+\item 
+  a configuration has a name, a status, and a list of subdetector configurations,
+  as shown in Figure~\ref{figure:configuration_top}
+\item
+  each subdetector has a separate configuration subtree
+\item
+  templates for the subdetector configurations are stored in the 
+  \href{https://github.com/pavel1murat/frontends/tree/main/odb/Mu2e/Subdetectors}
+  {\blue frontends/odb/Mu2e/Subdetectors} subdirectory
+\end{itemize}
 
 \begin{figure}[H]
   \begin{tikzpicture}
@@ -43,8 +61,30 @@ Figure~\ref{figure:configuration_top}
   }
 \end{figure}
 
-Each element has two fields, ``Enabled'' and ``Status'', used for monitoring - see
-Figure~\ref{figure:tracker_config}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Subdetector configuration}
+
+A subdetector configuration is described by a hierarchy of elements.
+Elements (substructures) are subdetector-specific, however element has
+two mandatory fields: "enabled" and "status", used for configuration,
+monitoring, and error reporting. A top view of the tracker configuration
+is shown in Figure~\ref{figure:tracker_config}.
+\begin{itemize}
+\item
+  enabled = 0: the element (subtree) is considered present, but not used.
+\item
+  enabled = 1:
+  \begin{itemize}
+  \item
+    status = 0 : the subsystem is OK
+  \item
+    status < 0 : the subsystem has a problem and an action is required
+    The value of the status variable is the error code
+  \item
+    status > 0 : the subsystem has a warning-level problem, no immediate action
+    is required
+  \end{itemize}
+\end{itemize}
 
 \begin{figure}[H]
   \begin{tikzpicture}

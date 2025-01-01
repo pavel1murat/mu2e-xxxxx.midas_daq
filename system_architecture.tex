@@ -1,0 +1,202 @@
+\section{System architecture}
+
+The proposed system consists of two big software components :
+\begin{itemize}
+\item
+  ARTDAQ : handles the trigger farm and the data processing
+\item
+  MIDAS : handles the run configuration, run control, messaging,
+  standardizes interfaces between various parts of the online system,
+  and provides web-based interface for the shifters,
+\end{itemize}
+
+The DAQ architecture is schematically presented in Figure ~\ref{figure:system_architecture}
+\begin{figure}[H]
+  \begin{tikzpicture}
+    \node[anchor=south west,inner sep=0] at (0,0.) {
+      % \node[shift={(0 cm,0.cm)},inner sep=0,rotate={90}] at (0,0) {}
+      \makebox[\textwidth][c] {
+        \includegraphics[width=1.1\textwidth]{pdf/system_architecture}
+      }
+    };
+    % \node [text width=8cm, scale=1.0] at (14.5,0.5) {$\mu_B$, expected background mean};
+    % \node [text width=8cm, scale=1.0, rotate={90}] at (1.5,7.5) { $S_{D}$, ``discovery'' signal strength  };
+  \end{tikzpicture}
+  \caption{
+    \label{figure:system_architecture}
+    Architecture of the MIDAS-based DAQ system
+  }
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{MIDAS}
+
+COre parts of MIDAS are :
+
+\begin{itemize}
+\item 
+  mhttpd, a web server with restricted functionality
+  mhttpd connects its clients to ODB. 
+  The mhttpd doesn't execute any applications. Instead, it only updates the ODB.
+\item
+  Clients: frontends, communicating with the hardware and other
+  parts of the system. Different types of frontends. Mu2e only needs slow monitoring.
+\item
+  Online DataBase (ODB) - a shared memory segment, which stores all configuration
+  data of the system
+  Despite its name, ODB is not a database. Instead, it stores only current configuration
+  of the system, As the new run starts, a run number-stamped configuration is exported and stored.
+  Logical organization of ODB maps onto a json structure and is well suited for describing
+  complex configurations with multiple levels of hierarchy
+\end{itemize}
+
+MIDAS ODB has several interfaces:
+\begin{itemize}
+\item 
+  web-based interface - via the mhttpd ODB page
+\item
+  command line interface (odbedit)
+\item
+  C++ interface allowing C++ clients to interact with ODB
+\item
+  python interface
+\end{itemize}
+
+In all cases, clients connect to MHTTPD and MHTTPD acts as
+the only agent directly interacting with the ODB.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Frontends}
+
+MIDAS supports frontends of different types, which include the data readout and monitoring
+frontends.
+
+MIDAS event building functionality is not used , done by ARTDAQ.
+
+The architecture of the Mu2e DAQ requires only monitoring and slow control frontends.
+
+All high bandwidth traffic goes through ARTDAQ.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Interprocess communication} 
+
+Two mechanisms
+\begin{itemize}
+\item
+  via ODB : some clients write into ODB, others read
+\item
+  separate collection of the monitoring information and its visualization
+\item
+  messaging: jsonrpc. Each client can have a jsonrpc server and receive messages
+  from any other client.
+\item
+  clients can broadcast messages to the system (info and alarm)
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Slow monitoring}
+
+MIDAS history system provides the framework for slow monitoring.
+The historical data could be stored in  MIDAS internal format or in a database.
+The list of supported databases includes ODBC, SQLITE, MYSQL and PGSQL.
+
+This functionality is similar to that of grafana, however integrated with the
+rest of the system
+
+
+\begin{itemize}
+\item
+  one monitoring frontend per node 
+  \begin{itemize}
+  \item
+    controls and configures DTC's and ROCs on this node
+  \item
+    controls the CFO if the CFO is running on this node
+  \item
+    monitors DTCs and ROCs, collecting history and non-history information
+  \item
+    monitors artdaq processes d separate collection of the monitoring information and its visualization
+  \end{itemize}
+\end{itemize}
+
+Figure ~\ref{figure:slow_controls_node_page} gives an example of one of the slow controls pages
+
+\begin{figure}[H]
+  \begin{tikzpicture}
+    \node[anchor=south west,inner sep=0] at (0,0.) {
+      % \node[shift={(0 cm,0.cm)},inner sep=0,rotate={90}] at (0,0) {}
+      \makebox[\textwidth][c] {
+        \includegraphics[width=0.95\textwidth]{png/slow_controls_node_page}
+      }
+    };
+    % \node [text width=8cm, scale=1.0] at (14.5,0.5) {$\mu_B$, expected background mean};
+    % \node [text width=8cm, scale=1.0, rotate={90}] at (1.5,7.5) { $S_{D}$, ``discovery'' signal strength  };
+  \end{tikzpicture}
+  \caption{
+    \label{figure:slow_controls_node_page}
+    A prototype of the DAQ node slow control page. Monitored are the DTC and ROC temperatures and voltages
+    and rates of the ARTDAQ processes
+  }
+\end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Alarm system}
+
+MIDAS has a built-in alarm system which could be used to inform shifters
+about various categories of failures.
+
+That is not a replacement for critical alarms coming from different inputs.
+CRYO ? Accelerator ? - talk to Andy Hocker.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\subsection{Javascript web interface}
+
+\begin{itemize}
+\item 
+  MIDAS web interface is a combination of HTML+Javascript.
+\item 
+  MIDAS provides Javascript API to ODB, which facilitates development of
+  functional experiment-specific {\bf custom} web pages.
+  The interface is documented at \\
+  \href{https://daq00.triumf.ca/MidasWiki/index.php/Custom\_Page}
+  {\blue https://daq00.triumf.ca/MidasWiki/index.php/Custom\_Page}
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Interfaces to ECL, ELOG, Slack}
+
+MIDAS has interfaces to internal and external ELOGs and Slack.
+\begin{itemize}
+\item
+  interface to the external ELOG has been implemented and tested
+\item
+  interface to Slack has been tested and used by at least two experiments - MEG and g-2
+\item
+  interface to ECL - to be implemented
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Interface to EPICS}
+
+Although MIDAS has its own history system , it also has an interface to EPICS,
+implemented as a slow control frontend
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{DQM}
+
+DQM processes use ROOT-based histogramming. As any ROOT executable is a web server,
+the DAQM jobs publish their histograms on the web, and their clients (users)
+simply connect to them over the http protocol.
+
