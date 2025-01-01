@@ -185,11 +185,11 @@ is shown in Figure~\ref{figure:tracker_config}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Configuration of the frontends}
+\subsection{DAQ-specific frontends}
 
 \begin{itemize}
 \item
-  one monitoring/control frontend per DAQ server . MOnitoring:
+  one monitoring/control frontend per DAQ server. Monitoring:
   \begin{itemize}
   \item
     2 DTC's with 6 ROCs per DTC
@@ -203,8 +203,109 @@ is shown in Figure~\ref{figure:tracker_config}.
     overall health: amount of free space available
   \end{itemize}
 \item
+  emulated CFO:
+  \begin{itemize}
+  \item
+    currently : a separate frontend 
+  \item 
+    make the CFO frontend a separate thread of the node frontend
+  \end{itemize}
+\item
+  external CFO frontend 
+\item
   global control frontend:
 \end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Run transition sequence}
+
+This section describes the sequence in which different run transitions
+are executed by the system components.
+
+\add{does OTSDAQ allow different execution sequences for
+  different run transitions ? }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Begin Run}
+\begin{itemize}
+\item
+  subdetector hardware configuration
+\item
+  sequencer requests the new run
+\item
+  MIDAS begin start
+  \begin{itemize}
+  \item
+    global config frontend - pre-begin run records the transition start
+  \item
+    DTC configuration frontends 
+  \item
+    TFM frontend - artdaq processes
+  \item
+    CFO frontend 
+  \item
+    global configuration frontend
+  \end{itemize}
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{End Run}
+\begin{itemize}
+\item
+  MIDAS end start
+  \begin{itemize}
+  \item
+    global configuration frontend pre-end run callback: records
+    the transition start
+  \item
+    CFO frontend stops executing the run plan
+  \item
+    TFM frontend - artdaq processes
+  \item
+    DTC frontends - artdaq processes
+  \item
+    global configuration frontend records the end of transition
+  \end{itemize}
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Pause and Resume Run}
+
+Pause the run:
+
+\begin{itemize}
+\item
+  configuration frontend: pre-transition callback: record the transition start
+\item
+  CFO frontend: disable output 
+\item
+  TFM frontend: pause the run
+\item
+  DTC frontends: do nothing 
+\item
+  configuration frontend: record the transition end
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Resume Run}
+
+Pause the run:
+
+\begin{itemize}
+\item
+  configuration frontend: pre-transition callback: record the transition start
+\item
+  TFM frontend: pause the run
+\item
+  DTC frontends: do nothing 
+\item
+  CFO frontend: enable output 
+\item
+  configuration frontend: record the transition end
+\end{itemize}
+
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: t

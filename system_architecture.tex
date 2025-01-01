@@ -42,9 +42,7 @@ COre parts of MIDAS are :
   Clients: frontends, communicating with the hardware and other
   parts of the system. Different types of frontends. Mu2e only needs slow monitoring.
 \item
-  Online DataBase (ODB) - a shared memory segment, which stores all configuration
-  data of the system
-  Despite its name, ODB is not a database. Instead, it stores only current configuration
+  Online DataBase (ODB) - a shared memory segment, which stores all configuration data of the system. Despite its name, ODB is not a database. Instead, it stores only current configuration
   of the system, As the new run starts, a run number-stamped configuration is exported and stored.
   Logical organization of ODB maps onto a json structure and is well suited for describing
   complex configurations with multiple levels of hierarchy
@@ -65,8 +63,6 @@ MIDAS ODB has several interfaces:
 In all cases, clients connect to MHTTPD and MHTTPD acts as
 the only agent directly interacting with the ODB.
 
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Frontends}
 
@@ -77,25 +73,111 @@ MIDAS event building functionality is not used , done by ARTDAQ.
 
 The architecture of the Mu2e DAQ requires only monitoring and slow control frontends.
 
-All high bandwidth traffic goes through ARTDAQ.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Interprocess communication} 
+\subsection{Interface to ARTDAQ}
+All high bandwidth traffic goes through ARTDAQ.
 
-Two mechanisms
+ARTDAQ processes are controlled by the Trigger Farm Manager (TFM) frontend,
+tfm\_launch\_fe.py.
+
 \begin{itemize}
+\item 
+  TFM reads its initial settings from the "/Mu2e/ActiveRunConfiguration/DAQ/Tfm"
+  ODB configuration path.
 \item
-  via ODB : some clients write into ODB, others read
+  FCL files of ARTDAQ processes are stored in \$MU2E\_DAQ\_DIR/config/\$run\_configuration
+  subdirectory assumed to be the same (network mounted) on all DAQ nodes.
+  The FCL files could be regenerated manually based on the run configuration and the trigger table.
 \item
-  separate collection of the monitoring information and its visualization
+  Archival mechanism: the FCL files used for a given run are stored
+  in \$DAQ\_OUTPUT\_TOP/run\_records/\$run\_number area of the node where the TFM frontend is running.
 \item
-  messaging: jsonrpc. Each client can have a jsonrpc server and receive messages
-  from any other client.
-\item
-  clients can broadcast messages to the system (info and alarm)
+  the log files of ARTDAQ processes running on a given node are stored in \$DAQ\_OUTPUT\_TOP/logs
+  directory of that node
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Naming conventions for ARTDAQ components}
+
+It is assumed that :
+\begin{itemize}
+\item 
+  artdaq boardreaders described in the configuration have names "br01", "br02", etc
+\item 
+  artdaq event builders have names "eb01", "eb02", etc
+\item 
+  artdaq data loggers have names "dl01", "dl02", etc
+\item 
+  artdaq dispatchers have names "ds01", "ds02", etc
+\end{itemize}
+
+This convention allows to use component names, as they are, in the monitoring system.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Port assignment for ARTDAQ XML-RPC communication}
+\begin{itemize}
+\item
+  base\_port: 10000+1000*partition\_number
+\item 
+  TFM : base\_port
+\item 
+  MIDAS node monitoring frontend: base\_port+11;
+\item 
+  artdaq boardreaders: base\_port+101 and base\_port+102
+\item 
+  artdaq event builders : base\_port + 201 - base\_port+300;
+\item 
+  artdaq data loggers  : base\_port + 301 - base\_port+400;
+\item 
+  artdaq dispatchers : base\_port + 401 - base\_port+500
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Communication with ARTRAQ}
+
+\begin{itemize}
+\item
+  native artdaq communication is internal to the ARTDAQ
+\item
+  ARTDAQ processes report their metrics in XML-RPC format,
+  and it is assumed that parsing of the metrics, visualizing
+  it and generating alarms is the job of the 3-rd party application,
+  i.e. {\bf grafana}.
+\item
+  TFM queries the ARTDAQ process metrics over XML-RPC and records
+  them in ODB. That obsoletes the need in the 3rd party applications.
+\item
+  Mu2e -specific applications, i.e. the boardreaders and the filter modules 
+  communicate to the MIDAS server directly via messaging and report 
+  their status. Therefore simple alarms like single ROC timeouts etc
+  could be generated as they are detected. 
+  This avoids a need in an additional software to recognize an alarming
+  situation and trigger the corresponding notification mechanism.
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Interface to the online run conditions database} 
+
+\begin{itemize}
+\item
+  the interface is provided by the MIDAS Sequencer and 
+  \href{https://github.com/pavel1murat/frontends/blob/main/conf/mu2e_config_fe.py}
+  {\blue the global configuration frontend}.
+\item
+  before the TFM starts, the configuration frontend requests a new run 
+  number from the run configuration DB.
+\item
+  at begin run, the TFM frontend passes the run number to ARTDAQ processes.
+\item
+  the global configuration frontend registers the start and the stop of each
+  run transition in the run configuration database.
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \subsection{Slow monitoring}
 
 MIDAS history system provides the framework for slow monitoring.
@@ -104,7 +186,6 @@ The list of supported databases includes ODBC, SQLITE, MYSQL and PGSQL.
 
 This functionality is similar to that of grafana, however integrated with the
 rest of the system
-
 
 \begin{itemize}
 \item
@@ -149,7 +230,7 @@ MIDAS has a built-in alarm system which could be used to inform shifters
 about various categories of failures.
 
 That is not a replacement for critical alarms coming from different inputs.
-CRYO ? Accelerator ? - talk to Andy Hocker.
+CRYO ? Accelerator ? -{\red talk to Andy Hocker.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -157,7 +238,8 @@ CRYO ? Accelerator ? - talk to Andy Hocker.
 
 \begin{itemize}
 \item 
-  MIDAS web interface is a combination of HTML+Javascript.
+  MIDAS web interface is a combination of HTML5+Javascript, based on the
+  asynchronous approach to the web pages update (Ajax).
 \item 
   MIDAS provides Javascript API to ODB, which facilitates development of
   functional experiment-specific {\bf custom} web pages.
@@ -200,3 +282,30 @@ DQM processes use ROOT-based histogramming. As any ROOT executable is a web serv
 the DAQM jobs publish their histograms on the web, and their clients (users)
 simply connect to them over the http protocol.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\subsection{Interprocess communication} 
+
+The system supports three mechanisms
+\begin{itemize}
+\item
+  via ODB : some clients write into ODB, others read
+\item
+  separate collection of the monitoring information and its visualization
+\item
+  MIDAS messaging: jsonrpc.
+  \begin{itemize}
+  \item
+    Each client can have a jsonrpc server and receive messages
+    from any other client.
+  \item
+    clients can broadcast messages to the system (info and alarm)
+    and communicate to each other
+  \item
+    each frontend, C++ or Python, has a built-in jsonrpc communication
+    functionality built-in.
+  \end{itemize}
+\item
+  communication between ARTDAQ processes is based on an older technology,
+  XML-RPC. The TFM frontend supports the XML-RPC-based ARTDAQ communication
+  protocol.
+\end{itemize}
