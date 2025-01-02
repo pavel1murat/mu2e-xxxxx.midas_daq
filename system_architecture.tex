@@ -188,14 +188,26 @@ This convention allows to use component names, as they are, in the monitoring sy
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\subsection{Slow monitoring}
+\subsection{Slow monitoring and interface to EPICS}
 
-MIDAS history system provides the framework for slow monitoring.
+The slow monitoring framework is provided by the MIDAS history system.
+THis is one of the best technical solutions to the slow monitoring problem possible.
+The interface via ODB is simple and crisp:
+\begin{itemize}
+\item
+  all parameters to be monitored are stored by the monitoring frontends in ODB.
+\item
+  the visualization utilities simply display the content of the predefined ODB locations.
+\end{itemize}
+
+Therefore, the visualization and control is completely decoupled from the collection of the
+monitoring parameters.
+
 The historical data could be stored in  MIDAS internal format or in a database.
 The list of supported databases includes ODBC, SQLITE, MYSQL and PGSQL.
 
 This functionality is similar to that of grafana, however integrated with the
-rest of the system
+run control system
 
 \begin{itemize}
 \item
@@ -231,6 +243,22 @@ Figure ~\ref{figure:slow_controls_node_page} gives an example of one of the slow
     and rates of the ARTDAQ processes
   }
 \end{figure}
+
+
+In addition to its own fully implemented history system, MIDAS also has an interface to EPICS.
+The interface is implemented as a 
+\href{https://bitbucket.org/tmidas/midas/src/develop/examples/epics/}
+         {\blue slow control frontend} with the 
+\href{https://bitbucket.org/tmidas/midas/src/develop/drivers/device/epics_ca.cxx}
+{\blue special EPICS driver}.
+%
+One therefore can in a transparent way combine EPICS data collection capabilities 
+with the MIDAS web display system. MEG-II uses this approach for the beam parameter monitoring.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -271,18 +299,6 @@ MIDAS has interfaces to internal and external ELOGs and Slack.
 \item
   interface to ECL - to be implemented
 \end{itemize}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Interface to EPICS}
-
-Although MIDAS has its own history system , it also has an interface to EPICS,
-implemented as a slow control frontend
-
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: t
-%%% End:
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,7 +1,19 @@
 #+startup:fold
-
-
+( ------------------------------------------------------------------------------
 * directory: file:./
+* setup                                                                      
+#+begin_src
+note_number=xxxxxx
+git clone https://github.com/pavel1murat/mu2e-$note_number.midas_daq
+bibdir=<bib_dir> # choose the name
+git clone https://github.com/pavel1murat/mu2e_bibliography  bibdir
+export BIBINPUTS=$PWD/bibdir
+cd mu2e-$note_number.degrader_rpc
+make note
+okular tpm/mu2e-$note-number.pdf &
+#+end_src
+
 * ------------------------------------------------------------------------------
 * note: file:tmp/mu2e-xxxxx.pdf
 * drawings: 
+* ------------------------------------------------------------------------------
