@@ -76,20 +76,28 @@ the only agent directly interacting with the ODB.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Frontends}
 
-MIDAS supports frontends of different types, which include the data readout and monitoring
-frontends.
-
-MIDAS event building functionality is not used , done by ARTDAQ.
-
-The architecture of the Mu2e DAQ requires only monitoring and slow control frontends.
+\begin{itemize}
+\item 
+  MIDAS supports frontends of different types, which include the data readout and monitoring
+  frontends.
+\item 
+  MIDAS event building functionality is not used , done by ARTDAQ.
+\item 
+  The architecture of the Mu2e DAQ requires only monitoring and slow control frontends.
+\item
+  frontends can be implemented in C, C++, and Python
+\end{itemize}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Interface to ARTDAQ}
-All high bandwidth traffic goes through ARTDAQ.
+ARTDAQ handles all high-bandwidth data traffic, which includes reading the
+detector data, one-level software trigger, data logging, and event distribution
+to online consumers (DQM).
 
-ARTDAQ processes are controlled by the Trigger Farm Manager (TFM) frontend,
-tfm\_launch\_fe.py.
+ARTDAQ processes are controlled by the  \href{https://github.com/pavel1murat/frontends/blob/main/tfm_frontend/tfm_launch_fe.py}
+{\blue Trigger Farm Manager (TFM) frontend}, which interfaces MIDAS to the
+\href{https://github.com/pavel1murat/tfm/blob/main/rc/control/farm_manager.py}{\blue TFM}.
 
 \begin{itemize}
 \item 
@@ -100,11 +108,11 @@ tfm\_launch\_fe.py.
   subdirectory assumed to be the same (network mounted) on all DAQ nodes.
   The FCL files could be regenerated manually based on the run configuration and the trigger table.
 \item
-  Archival mechanism: the FCL files used for a given run are stored
-  in \$DAQ\_OUTPUT\_TOP/run\_records/\$run\_number area of the node where the TFM frontend is running.
+  Archival mechanism: the FCL files used for a given run are stored in \\
+  \$DAQ\_OUTPUT\_TOP/run\_records/\$run\_number area of the node where the TFM frontend is running.
 \item
-  the log files of ARTDAQ processes running on a given node are stored in \$DAQ\_OUTPUT\_TOP/logs
-  directory of that node
+  the log files of ARTDAQ processes running on a given node, one logfile per process per run,
+  are stored in \$DAQ\_OUTPUT\_TOP/logs directory of that node
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -122,7 +130,7 @@ It is assumed that :
   artdaq dispatchers have names "ds01", "ds02", etc
 \end{itemize}
 
-This convention allows to use component names, as they are, in the monitoring system.
+This convention allows to use the ARTDAQ component names, as is, in the monitoring system.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Port assignment for ARTDAQ XML-RPC communication}

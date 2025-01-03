@@ -100,7 +100,7 @@
     \vspace{0.2in}
 
     This document describes a solution for the Mu2e data acquisition
-    system based on MIDAS+ARTDAQ {\red need a name? }.
+    system based on MIDAS+ARTDAQ {\red should there be a name? }.
 
     It has been prototyped and tested by several Mu2e
     detector groups. 
@@ -142,48 +142,59 @@
 % }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
-\section {Introduction}
+\section {Executive Summary}
 
-During the data taking, the DAQ system of the experiment has to be functional 24x7.
-The Mu2e DAQ development effort was lagging quite significantly, and although some
-progress has been made, after years of trying no Mu2e collaborator can operate
-the DAQ system in their own. With a few months left before the start of the cosmic run,
-the system has missing pieces yet to be designed.
-
+Development of the Mu2e DAQ has been lagging for quite significant time.
+Although some progress has been recently made, after years of trying no Mu2e collaborator
+can operate the DAQ system in their own. With a few months left before the start of the
+cosmic run, the system has missing pieces which are yet to be designed.
+%
 The core of the DAQ system, OTSDAQ, has not been used before by any running experiment.
 In is complicated and undocumented. The interfaces between different parts are not
-specified, and complexity and the lack of modularity create a high threshold
-for the Mu2e collaborators to start contributing. Most of the DAQ development
-is happening outside the collaboration, and the collaboration has very a limited
-input into the development process.
+specified, and its complexity and lack of modularity create a very high entry
+threshold for the Mu2e collaborators.
+%
+Most of the DAQ development is happening outside the collaboration which has very
+a limited input into the development process.
+%
+During the data taking, the collaboration will have to operate the DAQ system
+and it will have to be functional 24x7. In our view, the cost of operating 
+and supporting the present DAQ system, expressed in terms of the lost beam time,
+will be too high.
 
-In our view, it will be very difficult for the collaboration to operate and support
-the present system during he data taking.
-
-We have therefore developed and prototyped a DAQ system based on ARTDAQ and MIDAS.
-
+% 
+We have therefore developed and prototyped a DAQ system based on the combination of two
+packages, ARTDAQ \cite{2017_ARTDAQ_Biery} and MIDAS \cite{2025_MIDAS_WIKI}.
+%
 ARTDAQ is a software for a trigger farm developed at Fermilab and previously used
 by several Fermilab neutrino experiments. 
-
-MIDAS is a full DAQ suite which has been used for about 30 years
-by many experiments at PSI, TRIUMF, CERN, KEK, and also g-2 experiment
-at Fermilab. Out of running experiments, MIDAS is currently used by MEG-II.
-Another CLFV experiment at PSI, Mu3e, which DAQ hardware architecture
+%
+MIDAS is a full DAQ suite which has been used for about 30 years by many HEP experiments
+at PSI, TRIUMF, CERN, KEK, and also by the g-2 experiment at Fermilab.
+%
+Out of the currently running experiments, MIDAS is currently used by MEG-II which,
+as Mu2e,  searches for CLFV. Another CLFV experiment, Mu3e, which DAQ hardware architecture
 is rather close to that of Mu2e, will also be using a MIDAS-based DAQ system.
-In a way, it is a de-facto standard for experiments with low energy muon beams.
+In a way, MIDAS became a de-facto DAQ standard for small and medium scale HEP
+experiments.
 
 Any DAQ system initially has many issues which can only be uncovered and fixed
-during operations. MIDAS has been tuned and debugged by decades of its use by
-running experiments. Its architecture and the underlying software technologies
-have evolved with time and currently
+by operating it. MIDAS has been debugged and tuned by tens of experiments
+and by decades of the running time. Although the initial design goes 30 years back,
+its architecture is advanced and the software infrastructure is constantly updated
+to use modern technologies.
 
-New collaborators joining Mu2e will likely know MIDAS.
-
-Based on our technical assessment, a MIDAQ + ARTDAQ combination provides
-the best solution for the Mu2e DAQ.
+Based on our technical assessment, a system, which combines the power of
+the distributed ARTDAQ data processing with the strength of the integrated
+MIDAS-based run control and monitoring, provides the best technical solution
+for the Mu2e DAQ.
+%
+Adding to that, many Mu2e collaborators already have operational experience with
+the MIDAS-based DAQ. New collaboration members, coming to Mu2e from other muon 
+experiments will likely know MIDAS.
 
 The following sections describe the architecture of the proposed system,
-its parts, interfaces between them, the status of the present implementation.
+its interfaces, and the status of the present implementation.
 
 \include{system_architecture}
 \include{mu2e_configuration}
@@ -202,7 +213,7 @@ its parts, interfaces between them, the status of the present implementation.
   the solution is significantly simpler for both the users and the developers
 \item
   its current functionality, in many respects, already exceeds that
-  of the OTSDAQ-based system  
+  of the current OTSDAQ-based system  
 \item
   collaboration members, including students, are contributing
   to the development process. 
