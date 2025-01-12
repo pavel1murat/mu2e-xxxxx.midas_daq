@@ -144,8 +144,8 @@
 \newpage
 \section {Executive Summary}
 
-Development of the Mu2e DAQ has been lagging for quite significant time.
-Although some progress has been recently made, after years of trying no Mu2e collaborator
+Development of the Mu2e DAQ has been lagging behind for quite significant time.
+Despite some recent progress, after years of trying no Mu2e collaborator
 can operate the DAQ system in their own. With a few months left before the start of the
 cosmic run, the system has missing pieces which are yet to be designed.
 %
@@ -155,7 +155,7 @@ specified, and its complexity and lack of modularity create a very high entry
 threshold for the Mu2e collaborators.
 %
 Most of the DAQ development is happening outside the collaboration which has very
-a limited input into the development process.
+limited input into the development process.
 %
 During the data taking, the collaboration will have to operate the DAQ system
 and it will have to be functional 24x7. In our view, the cost of operating 
@@ -166,11 +166,12 @@ will be too high.
 We have therefore developed and prototyped a DAQ system based on the combination of two
 packages, ARTDAQ \cite{2017_ARTDAQ_Biery} and MIDAS \cite{2025_MIDAS_WIKI}.
 %
-ARTDAQ is a software for a trigger farm developed at Fermilab and previously used
-by several Fermilab neutrino experiments. 
+ARTDAQ is a distributed trigger farm software developed at Fermilab and previously
+used by several Fermilab neutrino experiments. 
 %
 MIDAS is a full DAQ suite which has been used for about 30 years by many HEP experiments
-at PSI, TRIUMF, CERN, KEK, and also by the g-2 experiment at Fermilab.
+at PSI, TRIUMF, CERN, KEK. It should be noted that MIDAS has also been used
+by the g-2 experiment at Fermilab.
 %
 Out of the currently running experiments, MIDAS is currently used by MEG-II which,
 as Mu2e,  searches for CLFV. Another CLFV experiment, Mu3e, which DAQ hardware architecture
@@ -178,10 +179,10 @@ is rather close to that of Mu2e, will also be using a MIDAS-based DAQ system.
 In a way, MIDAS became a de-facto DAQ standard for small and medium scale HEP
 experiments.
 
-Any DAQ system initially has many issues which can only be uncovered and fixed
+Any DAQ system at its early stages has many issues which can only be uncovered and fixed
 by operating it. MIDAS has been debugged and tuned by tens of experiments
-and by decades of the running time. Although the initial design goes 30 years back,
-its architecture is advanced and the software infrastructure is constantly updated
+and by decades of the running time. Although the initial design of MIDAS goes 30 years back,
+its architecture is advanced, and the software infrastructure is constantly updated
 to use modern technologies.
 
 Based on our technical assessment, a system, which combines the power of
@@ -197,10 +198,11 @@ The following sections describe the architecture of the proposed system,
 its interfaces, and the status of the present implementation.
 
 \include{system_architecture}
-\include{mu2e_configuration}
+\include{daq_configuration}
+\include{detector_configuration}
 % \include{artdaq_interface}
 \include{runtime_diagnostics}
-\include{operation}
+\include{operations}
 \include{support}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 

@@ -1,0 +1,85 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Operational procedures and details}
+
+\section{Starting and stopping a run }
+
+\begin{itemize}
+\item
+  request the next run number from the Mu2e run conditions database
+  (MIDAS sequencer ==> config/scripts/get\_next\_run\_number.py) and store
+  it in ODB (rn-1)
+\item
+  configure the detector using the sequencer scripts.
+  When the system will become stable enough, the configuration functionality
+  could be gradually moved to frontends.
+\item
+  start the run. At this point the detector is configured and ready to be read out.
+  The TFM frontend starts the ARTDAQ processes , after which the CFO frontend 
+  initiates new run plan.
+\item
+  to stop the run, the CFO frontend terminates execution of the run plan
+  by the CFO, after that the TFM frontend ends the run and the TFM terminates
+  the ARTDAQ processes.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Host Names}
+
+A DAQ host is typically simultaneously connected to several subnets and on
+those subnets it may have different names.
+For example, TCP traffic on a public network may be partially blocked,
+in which case the DAQ communication has to be using a private network.
+
+\begin{itemize}
+\item
+  "/Mu2e/ActiveRunConfiguration/DAQ/PublicSubnet"  :
+  defines the host name used for labeling the host in ODB
+\item
+  "/Mu2e/ActiveRunConfiguration/DAQ/PrivateSubnet" :
+  defines the host name used for defining the IPs
+\end{itemize}
+
+Usually the ``public'' names are shorter.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Naming conventions for ARTDAQ components}
+
+It is assumed that :
+\begin{itemize}
+\item 
+  artdaq boardreaders described in the configuration have names "br01", "br02", etc
+\item 
+  artdaq event builders have names "eb01", "eb02", etc
+\item 
+  artdaq data loggers have names "dl01", "dl02", etc
+\item 
+  artdaq dispatchers have names "ds01", "ds02", etc
+\end{itemize}
+
+This convention allows to use the ARTDAQ component names, as is, in the monitoring system.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Port assignment for ARTDAQ XMLRPC communication}
+
+ARTDAQ convention: for a given partition, the first port number is base\_port=10000+1000*PARTITION
+\begin{itemize}
+\item
+  boardreaders: base\_port+101 - base\_port+199\\
+  expect the total number of boardreaders in the system to be < 100 \\
+  The XMLRPC port of 'br01' is base\_port+101
+\item
+  filters (event builders) : base\_port+201 - base\_port+299
+  The XMLRPC port of 'eb01' is base\_port+201
+\item
+  data loggers: base\_port+301 - base\_port+399
+  The XMLRPC port of 'dl01' is base\_port+301
+\item
+  dispatchers: base\_port+401 - base\_port+499
+  The XMLRPC port of 'ds01' is base\_port+301
+\end{itemize}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

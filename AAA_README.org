@@ -17,3 +17,36 @@ okular tpm/mu2e-$note-number.pdf &
 * note: file:tmp/mu2e-xxxxx.pdf
 * drawings: 
 * ------------------------------------------------------------------------------
+* comparison to OTS
+
+|---------------+----------------------------------------------+-----------------------------------------|
+| aadf          | --------------OTS --------------             | --------------- MIDAS ----------------- |
+|---------------+----------------------------------------------+-----------------------------------------|
+| data model    | none, no concept of the user monitoring      | ODB stores everything                   |
+|               | data being stored / updated at run-time      |                                         |
+|               | SQL tables stored in json structures         | a json structure                        |
+|---------------+----------------------------------------------+-----------------------------------------|
+| documentation | none                                         | MIDAS website + examples                |
+|---------------+----------------------------------------------+-----------------------------------------|
+|               | DTCFrontEndInterface                         |                                         |
+| inheritance   | -> CFOandDTCCoreVInterface -> FEVInterface   |                                         |
+| from the      | -> ( WorkLoop, Configurable, VStateMachine)  |                                         |
+| whole world   | Workloop ->  virtual toolbox::lang::Class    |                                         |
+|               |                                              |                                         |
+|               | everything depends on everything else        |                                         |
+|---------------+----------------------------------------------+-----------------------------------------|
+| configuration | impenetrable                                 | clean                                   |
+|---------------+----------------------------------------------+-----------------------------------------|
+| client-server | OTS doesn't have clients , user applications | clients connect to server, independent  |
+|               | are loaded dynamically                       | on                                      |
+|               | crash of a user app crashes the server       |                                         |
+|---------------+----------------------------------------------+-----------------------------------------|
+| ARTDAQ        | ARTDAQ processes don't talk back to OTS      | ARTDAQ run-time info is stored in ODB   |
+|---------------+----------------------------------------------+-----------------------------------------|
+| FCL files     | no way to change a parameter manually        | runs from static FCL files              |
+|---------------+----------------------------------------------+-----------------------------------------|
+| symlinks      | lots                                         | none                                    |
+|---------------+----------------------------------------------+-----------------------------------------|
+| expertise     | 1 person                                     | many developers, many users             |
+|               |                                              |                                         |
+* 

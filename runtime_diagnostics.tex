@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Run-time diagnostics and error reporting}
+\section{Monitoring of the detector and its subsystems}
 
-At run-time, the status of the system is visualized by the system status tree.
+At run-time, the status of the detecotr is visualized by the system status tree.
 The top page of the tree is shown in Figure~\ref{figure:mu2e_status_page}.
 
 \begin{itemize}
@@ -48,14 +48,60 @@ configuration tree in ODB. For example, if a problem is detected with one of the
 tracker panels, the status box corresponding to the tracker on the top monitoring
 page will also become red.
 
-After a problem with the panel is cleared, its status gets set to zero by the
-monitoring frontend. The change is propagated up the configuration tree
-by the configuration frontend, and the color of the tracker monitoring box
-becomes green again.
+Figure~\ref{figure:daq_status} shows the prototype of the DAQ monitoring page.
+The screenshot has been takes after the end of one of the test runs.
+One of the mu2edaq22 boardreaders is ``in the red'' because one the ROCs it
+was reading timed out.
 
+\begin{figure}[H]
+  \begin{tikzpicture}
+    \node[anchor=south west,inner sep=0] at (0,0.) {
+      % \node[shift={(0 cm,0.cm)},inner sep=0,rotate={90}] at (0,0) {}
+      \makebox[\textwidth][c] {
+        \includegraphics[width=0.95\textwidth]{png/daq_status}
+      }
+    };
+    % \node [text width=8cm, scale=1.0] at (14.5,0.5) {$\mu_B$, expected background mean};
+    % \node [text width=8cm, scale=1.0, rotate={90}] at (1.5,7.5) { $S_{D}$, ``discovery'' signal strength  };
+  \end{tikzpicture}
+  \caption{
+    \label{figure:daq_status}
+    Prototype of the DAQ status page
+  }
+\end{figure}
 
-THe element status box becomes red. 
+After a problem with the ROC is cleared, and the readout resumes, the boardreader status
+is set to zero by the monitoring frontend, and the color of the corresponding box changes to green.
+The change is propagated up the configuration tree by the configuration frontend,
+and the color of the DAQ monitoring box becomes green again.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Interaction with the hardware}
+
+Interaction with the hardware is handled by the node frontends.
+
+If manual interaction is required, a click on the DTC button on the DAQ monitoring
+page shown in Figure~\ref{figure:daq_status} opens a DTC control page, prototype of which
+is shown in  Figure~\ref{figure:dtc_control_page}. Parameters of the commands to be executed
+are stored of ODB in the "/Mu2e/Commands" subtree and could be set interactively
+via either a web-based interface or {\bf odbedit}. 
+
+\begin{figure}[H]
+  \begin{tikzpicture}
+    \node[anchor=south west,inner sep=0] at (0,0.) {
+      % \node[shift={(0 cm,0.cm)},inner sep=0,rotate={90}] at (0,0) {}
+      \makebox[\textwidth][c] {
+        \includegraphics[width=0.95\textwidth]{png/dtc_control_page}
+      }
+    };
+    % \node [text width=8cm, scale=1.0] at (14.5,0.5) {$\mu_B$, expected background mean};
+    % \node [text width=8cm, scale=1.0, rotate={90}] at (1.5,7.5) { $S_{D}$, ``discovery'' signal strength  };
+  \end{tikzpicture}
+  \caption{
+    \label{figure:dtc_control_page}
+    Prototype of the DTC control page
+  }
+\end{figure}
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: t

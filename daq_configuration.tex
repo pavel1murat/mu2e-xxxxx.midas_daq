@@ -1,18 +1,28 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Configuring the Mu2e DAQ }
+\section{DAQ configuration}
 
-The system supports multiple configurations, as shown in Figure~\ref{figure:run_configurations}
+The system supports multiple run configurations, as shown in Figure~\ref{figure:run_configurations}
 
 \begin{itemize}
 \item 
-  The configurations are stored in "/Mu2e/RunConfigurations" subtree
+  Run configurations are stored in the "/Mu2e/RunConfigurations" subtree
 \item
-  each configuration is an independent subtree, any modification of a given 
-  configuration doesn't affect other configurations
+  each run configuration is an independent subtree, any modification
+  of a given run configuration doesn't affect other run configurations
 \item
-  a configuration can be saved as a .json structure and loaded from an external .json file
+  a run configuration template can be saved as a .json structure and loaded from
+  an external .json file, for example
+\begin{verbatim}
+mu2etrk@mu2edaq22:~/test_stand/pasha_031>odbedit
+[local:test_025:S]/>cd Mu2e/Run
+[local:test_025:S]/>cd Mu2e/RunConfigurations/demo
+[local:test_025:S]demo>save demo.json
+[local:test_025:S]demo>exit
+\end{verbatim}
 \item
   ODB links are allowed, but have to point within the configuration
+\item
+  configuration templates are archived on github. 
 \end{itemize}
 
 \begin{figure}[H]
@@ -42,6 +52,9 @@ The system supports multiple configurations, as shown in Figure~\ref{figure:run_
   templates for the subdetector configurations are stored in the 
   \href{https://github.com/pavel1murat/frontends/tree/main/odb/Mu2e/Subdetectors}
   {\blue frontends/odb/Mu2e/Subdetectors} subdirectory
+\item
+  Shown in  Figure~\ref{figure:run_configurations} ODB element "/Mu2e/ActiveRunConfiguration" is an ODB link
+  pointing to the currently active configuration.
 \end{itemize}
 
 \begin{figure}[H]
@@ -62,50 +75,6 @@ The system supports multiple configurations, as shown in Figure~\ref{figure:run_
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Subdetector configuration}
-
-A subdetector configuration is described by a hierarchy of elements.
-Elements (substructures) are subdetector-specific, however element has
-two mandatory fields: "enabled" and "status", used for configuration,
-monitoring, and error reporting. A top view of the tracker configuration
-is shown in Figure~\ref{figure:tracker_config}.
-\begin{itemize}
-\item
-  enabled = 0: the element (subtree) is considered present, but not used.
-\item
-  enabled = 1:
-  \begin{itemize}
-  \item
-    status = 0 : the subsystem is OK
-  \item
-    status < 0 : the subsystem has a problem and an action is required
-    The value of the status variable is the error code
-  \item
-    status > 0 : the subsystem has a warning-level problem, no immediate action
-    is required
-  \end{itemize}
-\end{itemize}
-
-\begin{figure}[H]
-  \begin{tikzpicture}
-    \node[anchor=south west,inner sep=0] at (0,0.) {
-      % \node[shift={(0 cm,0.cm)},inner sep=0,rotate={90}] at (0,0) {}
-      \makebox[\textwidth][c] {
-        \includegraphics[width=0.95\textwidth]{png/tracker_config}
-      }
-    };
-    % \node [text width=8cm, scale=1.0] at (14.5,0.5) {$\mu_B$, expected background mean};
-    % \node [text width=8cm, scale=1.0, rotate={90}] at (1.5,7.5) { $S_{D}$, ``discovery'' signal strength  };
-  \end{tikzpicture}
-  \caption{
-    \label{figure:tracker_config}
-    Tracker configuration. The tracker, as well as each of the stations, has ``Enabled'' and
-    ``Status'' fields.
-  }
-\end{figure}
-
-
-
 \subsection{Data Model}
 
 * configuration  : first step                                                

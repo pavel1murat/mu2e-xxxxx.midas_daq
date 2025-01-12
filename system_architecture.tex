@@ -7,12 +7,12 @@ The proposed system consists of two major software components :
 \item
   MIDAS : handles the run configuration, run control, messaging,
   standardizes interfaces between various parts of the online system,
-  and provides web-based interface for the shifters,
+  and provides web-based interfaces for shifters and experts,
 \end{itemize}
 
 ARTDAQ supports computing farms with distributed architecture, 
 and all high-bandwidth data traffic goes through ARTDAQ.
-
+%
 MIDAS architecture assumes a central server and multiple clients,
 best suited for configuration/control applications.
 
@@ -41,31 +41,48 @@ in Figure ~\ref{figure:system_architecture}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{MIDAS}
 
-COre parts of MIDAS are :
+Core parts of MIDAS are :
 
 \begin{itemize}
+\item
+  Online DataBase (ODB) - a shared memory segment, which stores all configuration data of the system.
+  Despite its name, ODB is not a database. Instead, it stores only current configuration
+  of the system, As the new run starts, a run number-stamped configuration is exported and stored.
+  Logical organization of ODB maps onto a json structure and is well suited for describing
+  complex run and detector configurations with multiple levels of hierarchy
 \item 
   mhttpd, a web server with restricted functionality
   mhttpd connects its clients to ODB. 
   The mhttpd doesn't execute any applications. Instead, it only updates the ODB.
 \item
+  mlogger: an executable responsible for logging the data. In case of Mu2e, that is the slow control data.
+  mlogger supports multiple backends, including local files, MySQL and PGSDL databases
+\item
+  mserver: an executable handling communication with remote clients
+\item
+  Sequencer: a interactive tool handling the detector hardware configuration.
+  The Sequencer has interfaces to ODB, operating system, and a simple scripting language
+  which provides the level of flexibility needed for configuring a detector of any complexity
+  at begin run.
+\item
   Clients: frontends, communicating with the hardware and other
   parts of the system. Different types of frontends. Mu2e only needs slow monitoring.
 \item
-  Online DataBase (ODB) - a shared memory segment, which stores all configuration data of the system. Despite its name, ODB is not a database. Instead, it stores only current configuration
-  of the system, As the new run starts, a run number-stamped configuration is exported and stored.
-  Logical organization of ODB maps onto a json structure and is well suited for describing
-  complex configurations with multiple levels of hierarchy
+  MIDAS state machine has four transitions: Start, Stop, Pause, and Resume.
+  Combined with the Sequencer-based hardware configuration, that provides everything
+  necessary for the DAQ state machine.
 \end{itemize}
 
 MIDAS ODB has several interfaces:
 \begin{itemize}
 \item 
-  web-based interface - via the mhttpd ODB page
+  web-based interface - via the mhttpd "ODB" page
 \item
-  command line interface (odbedit)
+  odbedit: a command line interface
 \item
-  C++ interface allowing C++ clients to interact with ODB
+  C interface to ODB
+\item
+  C++ interface with ODB
 \item
   python interface
 \end{itemize}
@@ -81,11 +98,12 @@ the only agent directly interacting with the ODB.
   MIDAS supports frontends of different types, which include the data readout and monitoring
   frontends.
 \item 
-  MIDAS event building functionality is not used , done by ARTDAQ.
+  MIDAS event building functionality is not used, event building is performed by ARTDAQ.
 \item 
   The architecture of the Mu2e DAQ requires only monitoring and slow control frontends.
 \item
-  frontends can be implemented in C, C++, and Python
+  frontends can be implemented in C, C++, and Python. The frontend templates are provided
+  with the distribution.
 \end{itemize}
 
 
@@ -113,42 +131,6 @@ ARTDAQ processes are controlled by the  \href{https://github.com/pavel1murat/fro
 \item
   the log files of ARTDAQ processes running on a given node, one logfile per process per run,
   are stored in \$DAQ\_OUTPUT\_TOP/logs directory of that node
-\end{itemize}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Naming conventions for ARTDAQ components}
-
-It is assumed that :
-\begin{itemize}
-\item 
-  artdaq boardreaders described in the configuration have names "br01", "br02", etc
-\item 
-  artdaq event builders have names "eb01", "eb02", etc
-\item 
-  artdaq data loggers have names "dl01", "dl02", etc
-\item 
-  artdaq dispatchers have names "ds01", "ds02", etc
-\end{itemize}
-
-This convention allows to use the ARTDAQ component names, as is, in the monitoring system.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Port assignment for ARTDAQ XML-RPC communication}
-\begin{itemize}
-\item
-  base\_port: 10000+1000*partition\_number
-\item 
-  TFM : base\_port
-\item 
-  MIDAS node monitoring frontend: base\_port+11;
-\item 
-  artdaq boardreaders: base\_port+101 and base\_port+102
-\item 
-  artdaq event builders : base\_port + 201 - base\_port+300;
-\item 
-  artdaq data loggers  : base\_port + 301 - base\_port+400;
-\item 
-  artdaq dispatchers : base\_port + 401 - base\_port+500
 \end{itemize}
 
 
@@ -181,17 +163,20 @@ This convention allows to use the ARTDAQ component names, as is, in the monitori
 
 \begin{itemize}
 \item
-  the interface is provided by the MIDAS Sequencer and 
+  the interface is provided by the
+  \href{https://github.com/pavel1murat/frontends/blob/main/utils/runinfodb.py}
+  {\blue python module talking the PG database}, MIDAS Sequencer, and the
   \href{https://github.com/pavel1murat/frontends/blob/main/conf/mu2e_config_fe.py}
-  {\blue the global configuration frontend}.
+  {\blue global configuration frontend}. The sequence is as follows:
 \item
-  before the TFM starts, the configuration frontend requests a new run 
-  number from the run configuration DB.
+  the Sequencer requests  a new run number from the run configuration DB
+  and stores it in ODB as  {\blue"/Runinfo/Run number"}.
 \item
-  at begin run, the TFM frontend passes the run number to ARTDAQ processes.
+  during the begin run transition, the TFM reads the run number from ODB
+  and passes it to ARTDAQ processes via the environment - env var {\blue RUN\_NUMBER}
 \item
   the global configuration frontend registers the start and the stop of each
-  run transition in the run configuration database.
+  run transition in the run configuration database (to be checked).
 \end{itemize}
 
 
