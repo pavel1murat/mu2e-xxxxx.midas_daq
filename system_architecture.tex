@@ -17,7 +17,8 @@ MIDAS architecture assumes a central server and multiple clients,
 best suited for configuration/control applications.
 
 The architecture of the proposed DAQ system is schematically presented
-in Figure ~\ref{figure:system_architecture}.
+in Figure ~\ref{figure:system_architecture} and explained in the remaining
+part of this section.
 
 \begin{figure}[H]
   \begin{tikzpicture}
@@ -41,37 +42,40 @@ in Figure ~\ref{figure:system_architecture}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{MIDAS}
 
-Core parts of MIDAS are :
+The core parts of MIDAS are :
 
 \begin{itemize}
 \item
-  Online DataBase (ODB) - a shared memory segment, which stores all configuration data of the system.
+  {\bf Online DataBase (ODB)} : a shared memory segment, which stores all configuration data of the system.
   Despite its name, ODB is not a database. Instead, it stores only current configuration
   of the system, As the new run starts, a run number-stamped configuration is exported and stored.
   Logical organization of ODB maps onto a json structure and is well suited for describing
   complex run and detector configurations with multiple levels of hierarchy
 \item 
-  mhttpd, a web server with restricted functionality
+  {\bf mhttpd}: a web server with restricted functionality
   mhttpd connects its clients to ODB. 
   The mhttpd doesn't execute any applications. Instead, it only updates the ODB.
 \item
-  mlogger: an executable responsible for logging the data. In case of Mu2e, that is the slow control data.
+  {\bf mlogger}: an executable responsible for logging the data. In case of Mu2e, that is the slow control data.
   mlogger supports multiple backends, including local files, MySQL and PGSDL databases
 \item
-  mserver: an executable handling communication with remote clients
+  {\bf mserver}: an executable handling communication with remote clients
 \item
-  Sequencer: a interactive tool handling the detector hardware configuration.
+  {\bf sequencer}: an interactive tool handling the detector hardware configuration.
   The Sequencer has interfaces to ODB, operating system, and a simple scripting language
   which provides the level of flexibility needed for configuring a detector of any complexity
   at begin run.
 \item
-  Clients: frontends, communicating with the hardware and other
+  clients: frontends, communicating with the hardware and other
   parts of the system. Different types of frontends. Mu2e only needs slow monitoring.
 \item
   MIDAS state machine has four transitions: Start, Stop, Pause, and Resume.
   Combined with the Sequencer-based hardware configuration, that provides everything
   necessary for the DAQ state machine.
 \end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{ODB and its interfaces}
 
 MIDAS ODB has several interfaces:
 \begin{itemize}
@@ -80,9 +84,7 @@ MIDAS ODB has several interfaces:
 \item
   odbedit: a command line interface
 \item
-  C interface to ODB
-\item
-  C++ interface with ODB
+  C/C++ interface
 \item
   python interface
 \end{itemize}
@@ -112,7 +114,7 @@ the only agent directly interacting with the ODB.
 ARTDAQ handles all high-bandwidth data traffic, which includes reading the
 detector data, one-level software trigger, data logging, and event distribution
 to online consumers (DQM).
-
+%
 ARTDAQ processes are controlled by the  \href{https://github.com/pavel1murat/frontends/blob/main/tfm_frontend/tfm_launch_fe.py}
 {\blue Trigger Farm Manager (TFM) frontend}, which interfaces MIDAS to the
 \href{https://github.com/pavel1murat/tfm/blob/main/rc/control/farm_manager.py}{\blue TFM}.
@@ -328,3 +330,10 @@ The system supports three mechanisms
   XML-RPC. The TFM frontend supports the XML-RPC-based ARTDAQ communication
   protocol.
 \end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\subsection{Data model ??? } 
+
+
+

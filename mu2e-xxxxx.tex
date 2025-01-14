@@ -185,51 +185,31 @@ and by decades of the running time. Although the initial design of MIDAS goes 30
 its architecture is advanced, and the software infrastructure is constantly updated
 to use modern technologies.
 
-Based on our technical assessment, a system, which combines the power of
-the distributed ARTDAQ data processing with the strength of the integrated
-MIDAS-based run control and monitoring, provides the best technical solution
-for the Mu2e DAQ.
+Based on our technical assessment, the proposed system which combines
+the distributed data processing by ARTDAQ with the integrated MIDAS-based
+run control and monitoring, provides the best technical solution for the Mu2e DAQ.
+In many aspects, its functionality already exceeds the functionality of the OTSDAQ.
 %
 Adding to that, many Mu2e collaborators already have operational experience with
 the MIDAS-based DAQ. New collaboration members, coming to Mu2e from other muon 
-experiments will likely know MIDAS.
+experiments will likely know MIDAS and would be able to operate the system and
+contribute to its future development.
+It should be noted, that students have already made important contribution
+to the current development.
 
 The following sections describe the architecture of the proposed system,
-its interfaces, and the status of the present implementation.
+its interfaces, and the status of the implementation.
 
 \include{system_architecture}
+\include{system_configuration}
+\include{subdetector_configuration}
 \include{daq_configuration}
-\include{detector_configuration}
 % \include{artdaq_interface}
-\include{runtime_diagnostics}
+\include{monitoring}
 \include{operations}
 \include{support}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\section {Summary}
-
-\begin{itemize}
-\item 
-  The MIDAS+ARTDAQ solution for the Mu2e DAQ has been extensively prototyped.
-\item
-  the solution is significantly simpler for both the users and the developers
-\item
-  its current functionality, in many respects, already exceeds that
-  of the current OTSDAQ-based system  
-\item
-  collaboration members, including students, are contributing
-  to the development process. 
-\item
-  new collaboration members joining Mu2e from other muon experiment will
-  likely have an experience of operating a MIDAS-based DAQ
-\end{itemize}
-
-Based on our assessment, a combination of MIDAQ and  ARTDAQ
-provides the best solution for the Mu2e DAQ.
-
-We therefore propose to exercise this solution and demonstrate
-its functionality in the upcoming GR4.
-
+\include{summary}
+\include{appendix}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

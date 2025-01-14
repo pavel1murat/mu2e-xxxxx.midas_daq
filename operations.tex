@@ -1,25 +1,101 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Operational procedures and details}
 
-\section{Starting and stopping a run }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Execution of run transitions}
 
+This section describes the sequence in which different run transitions
+are executed by the system components.
+
+\add{does OTSDAQ allow different execution sequences for
+  different run transitions ? }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Begin Run}
 \begin{itemize}
 \item
-  request the next run number from the Mu2e run conditions database
-  (MIDAS sequencer ==> config/scripts/get\_next\_run\_number.py) and store
-  it in ODB (rn-1)
-\item
-  configure the detector using the sequencer scripts.
+  subdetector hardware configuration, uses the sequencer scripts
   When the system will become stable enough, the configuration functionality
   could be gradually moved to frontends.
+\item
+  request the next run number from the Mu2e run conditions database
+  (MIDAS sequencer ==> config/scripts/get\_next\_run\_number.py) and stores
+  it in ODB (rn-1)
+  
 \item
   start the run. At this point the detector is configured and ready to be read out.
   The TFM frontend starts the ARTDAQ processes , after which the CFO frontend 
   initiates new run plan.
+  The sequence of the frontend execution is as follows:
+  \begin{itemize}
+  \item
+    global config frontend - pre-begin run records the transition start
+  \item
+    DTC configuration frontends 
+  \item
+    TFM frontend - artdaq processes
+  \item
+    CFO frontend 
+  \item
+    global configuration frontend
+  \end{itemize}
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{End Run}
+\begin{itemize}
 \item
-  to stop the run, the CFO frontend terminates execution of the run plan
-  by the CFO, after that the TFM frontend ends the run and the TFM terminates
-  the ARTDAQ processes.
+  MIDAS end start
+  \begin{itemize}
+  \item
+    global configuration frontend pre-end run callback: records
+    the transition start
+  \item
+    CFO frontend stops executing the run plan
+  \item
+    TFM frontend - artdaq processes
+  \item
+    DTC frontends - artdaq processes
+  \item
+    global configuration frontend records the end of transition
+  \end{itemize}
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Pause and Resume Run}
+
+Pause the run:
+
+\begin{itemize}
+\item
+  configuration frontend: pre-transition callback: record the transition start
+\item
+  CFO frontend: disable output 
+\item
+  TFM frontend: pause the run
+\item
+  DTC frontends: do nothing 
+\item
+  configuration frontend: record the transition end
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Resume Run}
+
+Pause the run:
+
+\begin{itemize}
+\item
+  configuration frontend: pre-transition callback: record the transition start
+\item
+  TFM frontend: pause the run
+\item
+  DTC frontends: do nothing 
+\item
+  CFO frontend: enable output 
+\item
+  configuration frontend: record the transition end
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,39 +1,9 @@
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\section{Detector configuration}
-
-Configuration of the Mu2e detector is described by its subdetector configurations,
-as shown in Figure~\ref{figure:configuration_top}.
-
-For example, for the Mu2e tracker the levels of hierarchy look as follows:
-tracker->stations->planes->panels.
-Elements (substructures) are subdetector-specific, however element has
-two mandatory fields: "enabled" and "status", used for configuration,
-monitoring, and error reporting.
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% .
 
-\subsubsection{Tracker} 
+\subsection{Tracker} 
 
-
-A top view of the tracker configuration
-is shown in Figure~\ref{figure:tracker_config}.
-\begin{itemize}
-\item
-  enabled = 0: the element (subtree) is considered present, but not used.
-\item
-  enabled = 1:
-  \begin{itemize}
-  \item
-    status = 0 : the subsystem is OK
-  \item
-    status < 0 : the subsystem has a problem and an action is required
-    The value of the status variable is the error code
-  \item
-    status > 0 : the subsystem has a warning-level problem, no immediate action
-    is required
-  \end{itemize}
-\end{itemize}
+A top view of the tracker configuration is shown in Figure~\ref{figure:tracker_config}.
 
 \begin{figure}[H]
   \begin{tikzpicture}
@@ -53,8 +23,7 @@ is shown in Figure~\ref{figure:tracker_config}.
 \end{figure}
 
 
-The next hierarchical levels of the tracker configuration, including the level of individual panels,
-are shown in Figure~\ref{figure:station_config}.
+Lower levels of the tracker configuration hierarchy are shown in Figure~\ref{figure:station_config}.
 
 \begin{figure}[H]
   \begin{tikzpicture}
