@@ -1,5 +1,10 @@
 #+startup:fold
-( ------------------------------------------------------------------------------
+* ------------------------------------------------------------------------------
+* TODO : descriptions of the CRV and STM
+* TODO : hardware CFO
+* TODO : DQM clients
+* TODO : continuous running of STM
+* ------------------------------------------------------------------------------
 * directory: file:./
 * setup                                                                      
 #+begin_src
