@@ -114,7 +114,7 @@ ARTDAQ configuration is stored in ODB. It consists of two parts:
   configuration of the artdaq processes on each farm node
 \end{itemize}
 
-A configuration of a single node is shown in Figure ~\ref{figure:artdaq_configuration}
+A configuration of a single node is shown in Figure ~\ref{figure:artdaq_configuration}.
 
 \begin{figure}[H]
   \begin{tikzpicture}
@@ -132,6 +132,22 @@ A configuration of a single node is shown in Figure ~\ref{figure:artdaq_configur
     CFO configuration
   }
 \end{figure}
+
+It has
+\begin{itemize}
+\item
+  parameters of the DTCs. There could be zero, one, or two DTCs on a farm node.
+\item
+  parameters of the artdaq processes running on that node.
+  Configuration of the ARTDAQ boardreaders has links to the definitions
+  of the DTCs they are reading. A boardreader need to know the PCIE address of the DTC
+  it is interacting with. At start time, the boardreaders query that information
+  from the ODB.
+  
+\item
+  parameters of the node control frontend, including the configuration of the
+  slow controls ("Frontend/Monitor")
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{DAQ-to-subdetectors interface}
@@ -154,6 +170,8 @@ as shown in Figure ~\ref{figure:daq_to_tracker_interface}.
   }
 \end{figure}
 
+A DAQ node has links to the DTCs installed on that node, and the tracker DTC ROCs shown have
+links to the definitions of the tracker panels they are reading.
 
 %%% Local Variables:
 %%% mode: latex

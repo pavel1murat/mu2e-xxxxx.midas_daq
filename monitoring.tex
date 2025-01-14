@@ -48,6 +48,81 @@ configuration tree in ODB. For example, if a problem is detected with one of the
 tracker panels, the status box corresponding to the tracker on the top monitoring
 page will also become red.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Tracker}
+
+A prototype of the top-level tracker monitoring page is shown
+in Figure ~\ref{figure:monitoring_tracker_view}.
+In the tested configuration, only one station out of 18 is enabled in ODB
+and is displayed in green.
+
+\begin{figure}[H]
+  \begin{tikzpicture}
+    \node[anchor=south west,inner sep=0] at (0,0.) {
+      % \node[shift={(0 cm,0.cm)},inner sep=0,rotate={90}] at (0,0) {}
+      \makebox[\textwidth][c] {
+        \includegraphics[width=0.95\textwidth]{png/monitoring_tracker_view}
+      }
+    };
+    % \node [text width=8cm, scale=1.0] at (14.5,0.5) {$\mu_B$, expected background mean};
+    % \node [text width=8cm, scale=1.0, rotate={90}] at (1.5,7.5) { $S_{D}$, ``discovery'' signal strength  };
+  \end{tikzpicture}
+  \caption{
+    \label{figure:monitoring_tracker_view}
+    Prototype of the top-level tracker monitoring page
+  }
+\end{figure}
+
+Pressing down the "view station'' button brings up shown in Figure ~\ref{figure:monitoring_station_view}
+the station monitoring page which shows status of 12 panels of that station.
+
+\begin{figure}[H]
+  \begin{tikzpicture}
+    \node[anchor=south west,inner sep=0] at (0,0.) {
+      % \node[shift={(0 cm,0.cm)},inner sep=0,rotate={90}] at (0,0) {}
+      \makebox[\textwidth][c] {
+        \includegraphics[width=0.95\textwidth]{png/monitoring_station_view.png}
+      }
+    };
+    % \node [text width=8cm, scale=1.0] at (14.5,0.5) {$\mu_B$, expected background mean};
+    % \node [text width=8cm, scale=1.0, rotate={90}] at (1.5,7.5) { $S_{D}$, ``discovery'' signal strength  };
+  \end{tikzpicture}
+  \caption{
+    \label{figure:monitoring_station_view}
+    Prototype of the tracker station monitoring page with 12 panels shown
+  }
+\end{figure}
+
+Further drilling down ("view panel" button) opens a web page with the details 
+of a chosen panel, which provides access to the parameters of each individual
+straw, stored in ODB and used for the detector configuration,
+as shown in Figure ~\ref{figure:monitoring_panel_view}
+
+\begin{figure}[H]
+  \begin{tikzpicture}
+    \node[anchor=south west,inner sep=0] at (0,0.) {
+      % \node[shift={(0 cm,0.cm)},inner sep=0,rotate={90}] at (0,0) {}
+      \makebox[\textwidth][c] {
+        \includegraphics[width=0.95\textwidth]{png/monitoring_panel_view.png}
+      }
+    };
+    % \node [text width=8cm, scale=1.0] at (14.5,0.5) {$\mu_B$, expected background mean};
+    % \node [text width=8cm, scale=1.0, rotate={90}] at (1.5,7.5) { $S_{D}$, ``discovery'' signal strength  };
+  \end{tikzpicture}
+  \caption{
+    \label{figure:monitoring_panel_view}
+    Prototype of the tracker panel monitoring page. Shown are the values of gains and thresholds
+    stored in ODB and used used to configure the panel readout.
+    Not not all 96 channels fit into the screenshot.
+  }
+\end{figure}
+
+\subsection{Calorimeter}
+\subsection{CRV}
+\subsection{EXM}
+\subsection{STM}
+\subsection{DAQ}
+
 Figure~\ref{figure:daq_status} shows the prototype of the DAQ monitoring page.
 The screenshot has been takes after the end of one of the test runs.
 One of the mu2edaq22 boardreaders is ``in the red'' because one the ROCs it
@@ -75,7 +150,11 @@ is set to zero by the monitoring frontend, and the color of the corresponding bo
 The change is propagated up the configuration tree by the configuration frontend,
 and the color of the DAQ monitoring box becomes green again.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Pressing a button corresponding to an ARTDAQ process brings up detailed
+information about that process. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \section{Interaction with the hardware}
 
 Interaction with the hardware is handled by the node frontends.
