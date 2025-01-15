@@ -1,20 +1,15 @@
 \section{System architecture}
 
-The proposed system consists of two major software components :
+The described system consists of two major software components :
 \begin{itemize}
 \item
-  ARTDAQ : handles the trigger farm and the data processing
+  ARTDAQ, which handles the trigger farm, the data processing,
+  and all high-bandwidth data traffic
 \item
-  MIDAS : handles the run configuration, run control, messaging,
+  MIDAS, which handles the run configuration, run control, messaging,
   standardizes interfaces between various parts of the online system,
   and provides web-based interfaces for shifters and experts,
 \end{itemize}
-
-ARTDAQ supports computing farms with distributed architecture, 
-and all high-bandwidth data traffic goes through ARTDAQ.
-%
-MIDAS architecture assumes a central server and multiple clients,
-best suited for configuration/control applications.
 
 The architecture of the proposed DAQ system is schematically presented
 in Figure ~\ref{figure:system_architecture} and explained in the remaining
@@ -46,18 +41,23 @@ The core parts of MIDAS are :
 
 \begin{itemize}
 \item
-  {\bf Online DataBase (ODB)} : a shared memory segment, which stores all configuration data of the system.
+  {\bf Online DataBase (ODB)} : a shared memory segment, which stores configuration and slow
+  control data of the system.
   Despite its name, ODB is not a database. Instead, it stores only current configuration
   of the system, As the new run starts, a run number-stamped configuration is exported and stored.
   Logical organization of ODB maps onto a json structure and is well suited for describing
-  complex run and detector configurations with multiple levels of hierarchy
+  complex run and detector configurations with multiple levels of hierarchy.
+  ODB also stores the slow control data and provides efficient access to them to multiple
+  DAQ clients.
 \item 
-  {\bf mhttpd}: a web server with restricted functionality
-  mhttpd connects its clients to ODB. 
-  The mhttpd doesn't execute any applications. Instead, it only updates the ODB.
+  {\bf mhttpd}: a web server with restricted functionality.
+  {\bf mhttpd} serves as an interface to ODB for all clients and provides
+  a web-based interface to ODB as well as a unified web-based run control interface.  
+  {\bf mhttpd} doesn't execute any applications. Instead, it only updates the ODB.
 \item
-  {\bf mlogger}: an executable responsible for logging the data. In case of Mu2e, that is the slow control data.
-  mlogger supports multiple backends, including local files, MySQL and PGSDL databases
+  {\bf mlogger}: an executable responsible for logging the data. In case of Mu2e, that
+  is the slow control data.
+  {\bf mlogger} supports multiple backends, including local files, MySQL and PGSDL databases
 \item
   {\bf mserver}: an executable handling communication with remote clients
 \item
@@ -66,16 +66,18 @@ The core parts of MIDAS are :
   which provides the level of flexibility needed for configuring a detector of any complexity
   at begin run.
 \item
-  clients: frontends, communicating with the hardware and other
-  parts of the system. Different types of frontends. Mu2e only needs slow monitoring.
+  {\bf clients} : frontends and other user analysis executables, communicating with the
+  hardware and other parts of the system. MIDAS supports multiple types of frontends,
+  Mu2e only needs the slow control functioinality.
 \item
-  MIDAS state machine has four transitions: Start, Stop, Pause, and Resume.
-  Combined with the Sequencer-based hardware configuration, that provides everything
-  necessary for the DAQ state machine.
+  MIDAS state machine has four transitions: {\bf start}, {\bf stop}, {\bf pause},
+  and {\bf resume}.
+  Combined with the Sequencer-based hardware configuration tools,
+  that provides all functionality a DAQ state machine might need.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{ODB and its interfaces}
+\subsection{Interfaces to ODB}
 
 MIDAS ODB has several interfaces:
 \begin{itemize}
@@ -84,28 +86,30 @@ MIDAS ODB has several interfaces:
 \item
   odbedit: a command line interface
 \item
-  C/C++ interface
+  C/C++ API
 \item
-  python interface
+  python API
 \end{itemize}
 
-In all cases, clients connect to MHTTPD and MHTTPD acts as
-the only agent directly interacting with the ODB.
+In all cases, clients connect to MHTTPD, and MHTTPD acts as the only agent
+interacting with the ODB directly.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Frontends}
 
 \begin{itemize}
 \item 
-  MIDAS supports frontends of different types, which include the data readout and monitoring
+  MIDAS supports frontends of different types, that include the data readout and monitoring
   frontends.
 \item 
-  MIDAS event building functionality is not used, event building is performed by ARTDAQ.
+  the DAQ system described here, [unlike the g-2 DAQ], is not using the event building
+  functionality of MIDAS. Instead, the event building is performed by ARTDAQ.
 \item 
-  The architecture of the Mu2e DAQ requires only monitoring and slow control frontends.
+  Therefore, the architecture of the presented DAQ only requires monitoring
+  and slow control frontends.
 \item
-  frontends can be implemented in C, C++, and Python. The frontend templates are provided
-  with the distribution.
+  frontends can be implemented in C/C++, and Python. MIDAS code distribution
+  provides multiple examples and templates of the frontend code.
 \end{itemize}
 
 
@@ -115,9 +119,8 @@ ARTDAQ handles all high-bandwidth data traffic, which includes reading the
 detector data, one-level software trigger, data logging, and event distribution
 to online consumers (DQM).
 %
-ARTDAQ processes are controlled by the  \href{https://github.com/pavel1murat/frontends/blob/main/tfm_frontend/tfm_launch_fe.py}
-{\blue Trigger Farm Manager (TFM) frontend}, which interfaces MIDAS to the
-\href{https://github.com/pavel1murat/tfm/blob/main/rc/control/farm_manager.py}{\blue TFM}.
+ARTDAQ processes are controlled by the Trigger Farm Manager \cite{DAQ_2025_TFM}
+which is interfaced to MIDAS via a special TFM frontend \cite{DAQ_2025_FRONTENDS}.
 
 \begin{itemize}
 \item 
@@ -125,13 +128,18 @@ ARTDAQ processes are controlled by the  \href{https://github.com/pavel1murat/fro
   ODB configuration path.
 \item
   FCL files of ARTDAQ processes are stored in \$MU2E\_DAQ\_DIR/config/\$run\_configuration
-  subdirectory assumed to be the same (network mounted) on all DAQ nodes.
-  The FCL files could be regenerated manually based on the run configuration and the trigger table.
+  subdirectory, where {\bf \$run\_configuration} is the name of the active run
+  configuration. The subdirectory is assumed to be the same (network mounted)
+  on all DAQ nodes.
+  The FCL files could be regenerated manually based on the run configuration
+  and the trigger table.
 \item
   Archival mechanism: the FCL files used for a given run are stored in \\
-  \$DAQ\_OUTPUT\_TOP/run\_records/\$run\_number area of the node where the TFM frontend is running.
+  \$DAQ\_OUTPUT\_TOP/run\_records/\$run\_number area of the central DAQ node
+  where the TFM frontend is running.
 \item
-  the log files of ARTDAQ processes running on a given node, one logfile per process per run,
+  the log files of the ARTDAQ processes running on a given node, one logfile
+  per process per run,
   are stored in \$DAQ\_OUTPUT\_TOP/logs directory of that node
 \end{itemize}
 
@@ -141,21 +149,26 @@ ARTDAQ processes are controlled by the  \href{https://github.com/pavel1murat/fro
 
 \begin{itemize}
 \item
-  native artdaq communication is internal to the ARTDAQ
+  artdaq processes communicate with each only via the data streams, however
+  they support an XML-RPC messaging protocol can execute a limited number
+  of commands, for example, handle the run transitions. Normally, the commands
+  are sent by the farm manager.
 \item
-  ARTDAQ processes report their metrics in XML-RPC format,
-  and it is assumed that parsing of the metrics, visualizing
-  it and generating alarms is the job of the 3-rd party application,
-  i.e. {\bf grafana}.
+  In the default implementation, the ARTDAQ processes are sending their metrics
+  via the MessageFacility messaging tool and it was assumed that parsing of
+  the metrics, visualizing it and generating alarms is the job of the 3-rd
+  party application, i.e. {\bf grafana}.
 \item
-  TFM queries the ARTDAQ process metrics over XML-RPC and records
-  them in ODB. That obsoletes the need in the 3rd party applications.
+  The ARTDAQ software was extended to allow querying the ARTDAQ process
+  metrics via the XML-RPC and storing that as history information
+  in ODB by the node frontends - see Section~\ref{sec:node_frontends}.
+  That obsoletes the need in the 3rd party applications. 
 \item
-  Mu2e -specific applications, i.e. the boardreaders and the filter modules 
-  communicate to the MIDAS server directly via messaging and report 
-  their status. Therefore simple alarms like single ROC timeouts etc
-  could be generated as they are detected. 
-  This avoids a need in an additional software to recognize an alarming
+  To report their status, Mu2e -specific applications, i.e. the boardreaders
+  and the filter modules communicate to the MIDAS server reporting their status 
+  via messaging and by storing it in ODB . Therefore simple alarms like single ROC
+  timeouts etc could be generated as soon as they are detected by the applications. 
+  This avoids the need in additional layers of software to recognize an alarming
   situation and trigger the corresponding notification mechanism.
 \end{itemize}
 
@@ -165,11 +178,9 @@ ARTDAQ processes are controlled by the  \href{https://github.com/pavel1murat/fro
 
 \begin{itemize}
 \item
-  the interface is provided by the
-  \href{https://github.com/pavel1murat/frontends/blob/main/utils/runinfodb.py}
-  {\blue python module talking the PG database}, MIDAS Sequencer, and the
-  \href{https://github.com/pavel1murat/frontends/blob/main/conf/mu2e_config_fe.py}
-  {\blue global configuration frontend}. The sequence is as follows:
+  a light-weight python module \cite{DAQ_2025_FRONTENDS} called by the MIDAS sequencer
+  interfaces the DAQ system to the online run conditions PSQL DB.
+  The communication protocol is as follows:
 \item
   the Sequencer requests  a new run number from the run configuration DB
   and stores it in ODB as  {\blue"/Runinfo/Run number"}.

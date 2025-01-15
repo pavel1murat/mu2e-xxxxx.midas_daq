@@ -20,12 +20,17 @@ Top view of the DAQ configuration hierarchy is shown in Figure~\ref{figure:daq_c
 \end{figure}
 
 It includes configuration of the CFO, the Trigger Farm Manager (TRM), configuration
-of the trigger farm nodes and a numebr of global DAQ parameters.
+of the trigger farm nodes and a number of global DAQ parameters.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \subsubsection{Emulated CFO configuration}
+Emulated CFO is controlled by the ``emulated CFO frontend''.
+That is a frontend with the CFO described a s MIDAS ``periodic equipment''.
+When the frontend's periodic readout function is called, a new train of EWMs
+is sent to the DTCs.
+
 An example of the emulated CFO configuration is shown in Figure~\ref{figure:cfo_config}.
 It includes a link to the configuration of the corresponding FPGA (DTC) 
 defined within the same configuration, and a list of the CFO-specific parameters.
@@ -72,7 +77,17 @@ defined within the same configuration, and a list of the CFO-specific parameters
 % 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{DAQ-specific frontends}
+\subsubsection{Global configuration frontend}
+\label{sec:conf_frontends}
+
+The configuration frontend, as it follows from its name, together with the
+Sequencer, manages the hardware configuration at begin run.
+It also registers the run transitions in the online run conditions database.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\subsubsection{Node frontends}
+\label{sec:node_frontends}
 
 \begin{itemize}
 \item
