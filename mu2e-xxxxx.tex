@@ -146,61 +146,61 @@
 \newpage
 \section {Executive Summary}
 
-Development of the Mu2e DAQ has been lagging behind for quite significant time.
-Despite some recent progress, after years of trying no Mu2e collaborator
-can operate the DAQ system in their own. With a few months left before the start of the
-cosmic run, the system has missing pieces which are yet to be designed.
-%
-The core of the DAQ system, OTSDAQ, has not been used before by any running experiment.
-In is complicated and undocumented. The interfaces between different parts are not
-specified, and its complexity and lack of modularity create a very high entry
-threshold for the Mu2e collaborators.
-%
-Most of the DAQ development is happening outside the collaboration which has very
-limited input into the development process.
-%
-During the data taking, the collaboration will have to operate the DAQ system
-and it will have to be functional 24x7. In our view, the cost of operating 
-and supporting the present DAQ system, expressed in terms of the lost beam time,
-will be too high.
-
+% Development of the Mu2e DAQ has been lagging behind for quite significant time.
+% Despite some recent progress, after years of trying no Mu2e collaborator
+% can operate the DAQ system in their own. With a few months left before the start of the
+% cosmic run, the system has missing pieces which are yet to be designed.
+% %
+% The core of the DAQ system, OTSDAQ, has not been used before by any running experiment.
+% In is complicated and undocumented. The interfaces between different parts are not
+% specified, and its complexity and lack of modularity create a very high entry
+% threshold for the Mu2e collaborators.
+% %
+% Most of the DAQ development is happening outside the collaboration which has very
+% limited input into the development process.
+% %
+% During the data taking, the collaboration will have to operate the DAQ system
+% and it will have to be functional 24x7. In our view, the cost of operating 
+% and supporting the present DAQ system, expressed in terms of the lost beam time,
+% will be too high.
 % 
-We have therefore developed and prototyped a DAQ system based on the combination of two
-packages, ARTDAQ \cite{2017_ARTDAQ_Biery} and MIDAS \cite{2025_MIDAS_WIKI}.
-%
-ARTDAQ is a distributed trigger farm software developed at Fermilab and previously
-used by several Fermilab neutrino experiments. 
-%
-MIDAS is a full DAQ suite which has been used for about 30 years by many HEP experiments
-at PSI, TRIUMF, CERN, KEK. It should be noted that MIDAS has also been used
-by the g-2 experiment at Fermilab.
-%
-Out of the currently running experiments, MIDAS is currently used by MEG-II which,
-as Mu2e,  searches for CLFV. Another CLFV experiment, Mu3e, which DAQ hardware architecture
-is rather close to that of Mu2e, will also be using a MIDAS-based DAQ system.
-In a way, MIDAS became a de-facto DAQ standard for small and medium scale HEP
-experiments.
-
-Any DAQ system at its early stages has many issues which can only be uncovered and fixed
-by operating it. MIDAS has been debugged and tuned by tens of experiments
-and by decades of the running time. Although the initial design of MIDAS goes 30 years back,
-its architecture is advanced, and the software infrastructure is constantly updated
-to use modern technologies.
-
-Based on our technical assessment, the proposed system which combines
-the distributed data processing by ARTDAQ with the integrated MIDAS-based
-run control and monitoring, provides the best technical solution for the Mu2e DAQ.
-In many aspects, its functionality already exceeds the functionality of the OTSDAQ.
-%
-Adding to that, many Mu2e collaborators already have operational experience with
-the MIDAS-based DAQ. New collaboration members, coming to Mu2e from other muon 
-experiments will likely know MIDAS and would be able to operate the system and
-contribute to its future development.
-It should be noted, that students have already made important contribution
-to the current development.
-
-The following sections describe the architecture of the proposed system,
-its interfaces, and the status of the implementation.
+% % 
+% We have therefore developed and prototyped a DAQ system based on the combination of two
+% packages, ARTDAQ \cite{2017_ARTDAQ_Biery} and MIDAS \cite{2025_MIDAS_WIKI}.
+% %
+% ARTDAQ is a distributed trigger farm software developed at Fermilab and previously
+% used by several Fermilab neutrino experiments. 
+% %
+% MIDAS is a full DAQ suite which has been used for about 30 years by many HEP experiments
+% at PSI, TRIUMF, CERN, KEK. It should be noted that MIDAS has also been used
+% by the g-2 experiment at Fermilab.
+% %
+% Out of the currently running experiments, MIDAS is currently used by MEG-II which,
+% as Mu2e,  searches for CLFV. Another CLFV experiment, Mu3e, which DAQ hardware architecture
+% is rather close to that of Mu2e, will also be using a MIDAS-based DAQ system.
+% In a way, MIDAS became a de-facto DAQ standard for small and medium scale HEP
+% experiments.
+% 
+% Any DAQ system at its early stages has many issues which can only be uncovered and fixed
+% by operating it. MIDAS has been debugged and tuned by tens of experiments
+% and by decades of the running time. Although the initial design of MIDAS goes 30 years back,
+% its architecture is advanced, and the software infrastructure is constantly updated
+% to use modern technologies.
+% 
+% Based on our technical assessment, the proposed system which combines
+% the distributed data processing by ARTDAQ with the integrated MIDAS-based
+% run control and monitoring, provides the best technical solution for the Mu2e DAQ.
+% In many aspects, its functionality already exceeds the functionality of the OTSDAQ.
+% %
+% Adding to that, many Mu2e collaborators already have operational experience with
+% the MIDAS-based DAQ. New collaboration members, coming to Mu2e from other muon 
+% experiments will likely know MIDAS and would be able to operate the system and
+% contribute to its future development.
+% It should be noted, that students have already made important contribution
+% to the current development.
+% 
+% The following sections describe the architecture of the proposed system,
+% its interfaces, and the status of the implementation.
 
 \include{system_architecture}
 \include{system_configuration}
@@ -209,6 +209,7 @@ its interfaces, and the status of the implementation.
 % \include{artdaq_interface}
 \include{monitoring}
 \include{operations}
+\include{dqm}
 \include{support}
 \include{summary}
 \include{appendix}

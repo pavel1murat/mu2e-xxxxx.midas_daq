@@ -79,20 +79,25 @@ The core parts of MIDAS are :
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Interfaces to ODB}
 
-MIDAS ODB has several interfaces:
+MIDAS ODB has several interfaces supporting different access modes;
 \begin{itemize}
 \item 
   web-based interface - via the mhttpd "ODB" page
 \item
-  odbedit: a command line interface
+  command line interface: {\bf odbedit}
 \item
-  C/C++ API
+  C/C++ API used by C/C++ clients
 \item
-  python API
+  python API used by python clients
 \end{itemize}
 
-In all cases, clients connect to MHTTPD, and MHTTPD acts as the only agent
+All C/C++ and python clients connect to MHTTPD, and MHTTPD acts as an agent
 interacting with the ODB directly.
+%
+odbedit also connects to ODB directly.
+%
+Multiple examples of C/C++ and python ODB clients could be found at
+{\blue \href{https://bitbucket.org/tmidas/midas/src/develop/}{https://bitbucket.org/tmidas/midas/src/develop}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Frontends}
